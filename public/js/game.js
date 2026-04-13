@@ -311,8 +311,8 @@ class GomokuGame {
   }
 
   drawUI(ctx, w, h) {
-    // UI区域高度固定为 h 的 15%，确保适配所有屏幕
-    const uiHeight = Math.floor(h * 0.15);
+    // UI区域高度固定为 h 的 12%，让棋盘更大
+    const uiHeight = Math.floor(h * 0.12);
     const y0 = h - uiHeight;
 
     // 底部背景

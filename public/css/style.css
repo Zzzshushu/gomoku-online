@@ -340,9 +340,9 @@ body {
   width: 100%;
   max-width: 500px;
   aspect-ratio: 1;
-  margin: 10px 0;
-  /* 确保容器不会超出视口 */
-  max-height: 60vh;
+  margin: 5px 0;
+  /* 确保棋盘占用更多空间 */
+  max-height: 75vh;
   overflow: hidden;
 }
 
