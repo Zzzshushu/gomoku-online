@@ -53,7 +53,7 @@
       <div class="card">
         <div id="aiGameArea">
           <div class="board-container">
-            <canvas id="gameCanvas"></canvas>
+            <canvas id="aiCanvas"></canvas>
           </div>
         </div>
       </div>
@@ -159,7 +159,9 @@
       
       <div class="board-container">
         <canvas id="gameCanvas"></canvas>
-        <div class="waiting-overlay" id="waitingOverlay">
+        
+        <!-- 等待覆盖层 - 仅联机模式显示 -->
+        <div class="waiting-overlay" id="waitingOverlay" style="display: none;">
           <div class="spinner"></div>
           <div class="waiting-text">等待对手加入...</div>
           <div class="share-hint">

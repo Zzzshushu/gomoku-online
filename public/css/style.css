@@ -341,28 +341,33 @@ body {
   max-width: 500px;
   aspect-ratio: 1;
   margin: 10px 0;
+  /* 确保容器不会超出视口 */
+  max-height: 60vh;
+  overflow: hidden;
 }
 
-#gameCanvas {
+#gameCanvas, #aiCanvas {
   width: 100%;
   height: 100%;
   border-radius: 8px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  display: block;
 }
 
 /* 游戏状态栏 */
 .game-status {
   width: 100%;
   max-width: 500px;
-  padding: 15px;
+  padding: 12px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+  font-size: 14px;
 }
 
 .status-text {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -382,18 +387,21 @@ body {
 .difficulty-selector {
   display: flex;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+  width: 100%;
+  max-width: 500px;
 }
 
 .diff-btn {
   flex: 1;
-  padding: 10px;
+  padding: 8px;
   background: rgba(255, 255, 255, 0.1);
   border: 2px solid transparent;
   border-radius: 8px;
   color: white;
   cursor: pointer;
   transition: all 0.3s;
+  font-size: 13px;
 }
 
 .diff-btn.active {
@@ -411,10 +419,13 @@ body {
   gap: 10px;
   width: 100%;
   max-width: 500px;
+  margin-bottom: 10px;
 }
 
 .game-controls .btn {
   flex: 1;
+  padding: 10px;
+  font-size: 14px;
 }
 
 /* 房间信息（联机模式） */

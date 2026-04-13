@@ -311,79 +311,79 @@ class GomokuGame {
   }
 
   drawUI(ctx, w, h) {
-    const boardAreaH = h - 120;
-    const y0 = boardAreaH;
+    // 减小UI区域高度，使其更好地适应屏幕
+    const uiHeight = 100;
+    const y0 = h - uiHeight;
 
     // 底部背景
     const uiGrad = ctx.createLinearGradient(0, y0, 0, h);
     uiGrad.addColorStop(0, 'rgba(44, 26, 18, 0.95)');
     uiGrad.addColorStop(1, 'rgba(30, 18, 12, 0.98)');
     ctx.fillStyle = uiGrad;
-    ctx.fillRect(0, y0, w, h - y0);
+    ctx.fillRect(0, y0, w, uiHeight);
 
     // 状态信息
     ctx.fillStyle = '#FFF';
-    ctx.font = 'bold 16px sans-serif';
+    ctx.font = 'bold 14px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
     if (this.mode === 'online' && !this.roomId) {
-      ctx.fillText('连接中...', w / 2, y0 + 25);
+      ctx.fillText('连接中...', w / 2, y0 + 15);
     } else if (this.gameOver) {
       const myColor = this.mode === 'ai' ? this.playerColor : this.onlinePlayerColor;
       if (this.winner === myColor) {
         ctx.fillStyle = '#FFD700';
-        ctx.fillText('🎉 恭喜，你赢了！', w / 2, y0 + 25);
+        ctx.fillText('🎉 恭喜，你赢了！', w / 2, y0 + 15);
       } else if (this.winner !== 0) {
         ctx.fillStyle = '#FF6B6B';
-        ctx.fillText('AI 获胜！再试试？', w / 2, y0 + 25);
+        ctx.fillText('AI 获胜！再试试？', w / 2, y0 + 15);
       } else {
         ctx.fillStyle = '#90CAF9';
-        ctx.fillText('平局！', w / 2, y0 + 25);
+        ctx.fillText('平局！', w / 2, y0 + 15);
       }
     } else if (this.aiThinking) {
       ctx.fillStyle = '#FFB74D';
-      ctx.fillText('AI 思考中...', w / 2, y0 + 25);
+      ctx.fillText('AI 思考中...', w / 2, y0 + 15);
     } else {
-      const myColor = this.mode === 'ai' ? this.playerColor : this.onlinePlayerColor;
       const isMyTurn = this.mode === 'ai' 
         ? this.currentPlayer === this.playerColor 
         : this.isMyTurn;
       
       if (isMyTurn) {
         ctx.fillStyle = '#4CAF50';
-        ctx.fillText('● 轮到你了', w / 2, y0 + 25);
+        ctx.fillText('● 轮到你了', w / 2, y0 + 15);
       } else {
         ctx.fillStyle = '#90CAF9';
-        ctx.fillText('○ 对手回合', w / 2, y0 + 25);
+        ctx.fillText('○ 对手回合', w / 2, y0 + 15);
       }
     }
 
     // 比分（仅AI模式）
     if (this.mode === 'ai') {
-      ctx.font = '12px sans-serif';
+      ctx.font = '11px sans-serif';
       ctx.fillStyle = '#BCAAA4';
       ctx.fillText(
         '比分  你 ' + this.playerScore + ' : ' + this.aiScore + ' AI  |  平 ' + this.drawCount,
-        w / 2, y0 + 44
+        w / 2, y0 + 32
       );
     }
 
-    const gap = w * 0.08;
-    const btnW = w * 0.4;
-    const btnH = 38;
-    const btnY = y0 + 50;
+    const gap = w * 0.06;
+    const btnW = w * 0.42;
+    const btnH = 32;
+    const btnY = y0 + 45;
 
-    // 按钮
-    this.drawButton(ctx, '悔 棋', gap, btnY, btnW, btnH, '#5D4037', '#795548');
+    // 按钮 - 减小尺寸
+    this.drawButton(ctx, '悔棋', gap, btnY, btnW, btnH, '#5D4037', '#795548');
     this.drawButton(ctx, '再来一局', w - gap - btnW, btnY, btnW, btnH, '#1B5E20', '#2E7D32');
 
     // AI难度选择（仅AI模式）
     if (this.mode === 'ai') {
-      const diffY = btnY + btnH + 20;
-      ctx.font = '12px sans-serif';
+      const diffY = btnY + btnH + 10;
+      ctx.font = '10px sans-serif';
       ctx.fillStyle = '#BCAAA4';
-      ctx.fillText('难度选择', w / 2, diffY - 5);
+      ctx.fillText('难度', w / 2, diffY);
 
       const diffW = (w - gap * 4) / 3;
       const diffs = [
@@ -396,7 +396,7 @@ class GomokuGame {
         const dx = gap + i * (diffW + gap);
         const isActive = this.difficulty === d.key;
         const bgColor = isActive ? d.color : '#4E342E';
-        this.drawButton(ctx, d.label, dx, diffY, diffW, 30, bgColor, bgColor);
+        this.drawButton(ctx, d.label, dx, diffY + 8, diffW, 24, bgColor, bgColor);
       });
     }
   }
