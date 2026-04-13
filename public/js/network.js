@@ -211,8 +211,11 @@ function showModeSelect() {
 function showAIMode() {
   hideAllPages();
   document.getElementById('aiMode').style.display = 'block';
-  if (!game) {
-    initGame();
+  
+  // AI模式使用aiCanvas
+  const aiCanvas = document.getElementById('aiCanvas');
+  if (!game || game.canvas !== aiCanvas) {
+    game = new GomokuGame(aiCanvas);
   }
   game.setMode('ai');
   game.resetGame();
@@ -255,9 +258,12 @@ function showGame() {
   hideAllPages();
   document.getElementById('gameMode').style.display = 'block';
   
-  if (!game) {
-    initGame();
+  // 联机模式使用gameCanvas
+  const gameCanvas = document.getElementById('gameCanvas');
+  if (!game || game.canvas !== gameCanvas) {
+    game = new GomokuGame(gameCanvas);
   }
+  
   if (game.mode === 'ai') {
     showAIMode();
     return;
