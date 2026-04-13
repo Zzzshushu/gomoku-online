@@ -32,12 +32,14 @@ class GomokuAI {
     const emptySpots = this.getCandidateMoves(boardState);
 
     if (emptySpots.length === 0) {
-      return { row: 7, col: 7 };
+      const center = Math.floor(this.size / 2);
+      return { row: center, col: center };
     }
 
     const totalStones = boardState.flat().filter(v => v !== 0).length;
     if (totalStones === 0) {
-      return { row: 7, col: 7 };
+      const center = Math.floor(this.size / 2);
+      return { row: center, col: center };
     }
 
     // 必杀/必防检查
@@ -73,7 +75,10 @@ class GomokuAI {
       }
     }
 
-    return { row: bestMove[0], col: bestMove[1] };
+    // 确保返回值在有效范围内
+    const validRow = Math.max(0, Math.min(this.size - 1, bestMove[0]));
+    const validCol = Math.max(0, Math.min(this.size - 1, bestMove[1]));
+    return { row: validRow, col: validCol };
   }
 
   minimax(board, depth, alpha, beta, isMaximizing, aiPlayer) {

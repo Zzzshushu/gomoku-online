@@ -187,6 +187,16 @@ class GomokuGame {
   }
 
   placeStone(row, col, player) {
+    // 边界检查，确保落子在有效范围内
+    if (row < 0 || row >= this.boardSize || col < 0 || col >= this.boardSize) {
+      console.error('Invalid move:', row, col);
+      return false;
+    }
+    if (this.boardState[row][col] !== 0) {
+      console.error('Position already occupied:', row, col);
+      return false;
+    }
+    
     this.boardState[row][col] = player;
     this.moveHistory.push({ row, col, player });
     this.board.lastMove = { row, col };
