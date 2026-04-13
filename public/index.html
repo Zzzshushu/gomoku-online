@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+  <title>五子棋对战平台</title>
+  
+  <!-- 微信分享配置 -->
+  <meta property="og:title" content="五子棋对战 - 邀请你来战！">
+  <meta property="og:description" content="和朋友一起玩五子棋，支持人机对战和联机对战">
+  <meta property="og:type" content="website">
+  
+  <!-- 微信网页应用配置 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="五子棋">
+  
+  <!-- 图标 -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+  
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 模式选择页面 -->
+    <div id="modeSelect" class="page mode-select">
+      <div class="logo">🎯</div>
+      <h1 class="title">五子棋对战平台</h1>
+      
+      <div class="mode-cards">
+        <div class="mode-card" onclick="showAIMode()">
+          <div class="icon">🤖</div>
+          <h3>人机对战</h3>
+          <p>与AI对战，练习棋艺<br>支持三个难度等级</p>
+        </div>
+        
+        <div class="mode-card" onclick="showOnlineMode()">
+          <div class="icon">🌐</div>
+          <h3>联机对战</h3>
+          <p>与好友实时对战<br>创建或加入房间</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI模式页面 -->
+    <div id="aiMode" class="page">
+      <div class="page-header">
+        <button class="back-btn" onclick="showModeSelect()">←</button>
+        <h2 class="page-title">人机对战</h2>
+      </div>
+      
+      <div class="card">
+        <div id="aiGameArea">
+          <div class="board-container">
+            <canvas id="gameCanvas"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      <div class="game-controls" style="margin-top: 15px;">
+        <button class="btn btn-secondary" onclick="showModeSelect()">返回主页</button>
+      </div>
+    </div>
+
+    <!-- 联机模式 - 房间列表 -->
+    <div id="onlineMode" class="page">
+      <div class="page-header">
+        <button class="back-btn" onclick="showModeSelect()">←</button>
+        <h2 class="page-title">联机对战</h2>
+      </div>
+      
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button class="btn btn-primary" onclick="showCreateRoom()" style="flex: 1;">创建房间</button>
+        <button class="btn btn-secondary" onclick="showJoinRoom()" style="flex: 1;">加入房间</button>
+      </div>
+      
+      <div class="card">
+        <h3 style="margin-bottom: 15px;">等待中的房间</h3>
+        <div id="roomList">
+          <div class="empty-rooms">加载中...</div>
+        </div>
+      </div>
+      
+      <button class="btn btn-secondary" onclick="network && network.listRooms()" style="margin-top: 15px;">
+        🔄 刷新房间列表
+      </button>
+    </div>
+
+    <!-- 创建房间页面 -->
+    <div id="createRoom" class="page">
+      <div class="page-header">
+        <button class="back-btn" onclick="showOnlineMode()">←</button>
+        <h2 class="page-title">创建房间</h2>
+      </div>
+      
+      <div class="card">
+        <div class="form-group">
+          <label>你的昵称</label>
+          <input type="text" id="playerNameCreate" placeholder="输入昵称（选填）" maxlength="20">
+        </div>
+        
+        <button class="btn btn-primary" onclick="createRoom()">
+          创建房间
+        </button>
+      </div>
+      
+      <p style="text-align: center; color: rgba(255,255,255,0.5); margin-top: 20px; font-size: 14px;">
+        创建房间后，将房间号分享给好友即可开始对战
+      </p>
+    </div>
+
+    <!-- 加入房间页面 -->
+    <div id="joinRoom" class="page">
+      <div class="page-header">
+        <button class="back-btn" onclick="showOnlineMode()">←</button>
+        <h2 class="page-title">加入房间</h2>
+      </div>
+      
+      <div class="card">
+        <div class="form-group">
+          <label>房间号</label>
+          <input type="text" id="roomIdInput" placeholder="输入6位房间号" maxlength="6" style="text-transform: uppercase; letter-spacing: 3px; text-align: center; font-size: 18px;">
+        </div>
+        
+        <div class="form-group">
+          <label>你的昵称</label>
+          <input type="text" id="playerNameJoin" placeholder="输入昵称（选填）" maxlength="20">
+        </div>
+        
+        <button class="btn btn-primary" onclick="joinRoomById()">
+          加入房间
+        </button>
+      </div>
+    </div>
+
+    <!-- 游戏页面 -->
+    <div id="gameMode" class="page game-page">
+      <div class="game-header">
+        <div class="game-info">
+          <div class="player-info current-turn">
+            <div class="stone-icon stone-black"></div>
+            <span class="player-name" id="player1Name">黑方</span>
+          </div>
+          <span style="color: #888;">VS</span>
+          <div class="player-info">
+            <div class="stone-icon stone-white"></div>
+            <span class="player-name" id="player2Name">白方</span>
+          </div>
+        </div>
+        <button class="exit-btn" onclick="exitToMenu()">退出</button>
+      </div>
+      
+      <!-- 房间信息（联机模式显示） -->
+      <div class="room-info-display" id="roomInfoBar" style="display: none;">
+        <span>房间号：<span class="room-id" id="displayRoomId">-</span></span>
+        <button class="copy-btn" onclick="copyRoomId()">复制</button>
+      </div>
+      
+      <div class="board-container">
+        <canvas id="gameCanvas"></canvas>
+        <div class="waiting-overlay" id="waitingOverlay">
+          <div class="spinner"></div>
+          <div class="waiting-text">等待对手加入...</div>
+          <div class="share-hint">
+            <p style="margin: 15px 0 10px;">分享给好友邀请对战</p>
+            房间号：<span id="roomIdDisplay" style="font-size: 24px; font-weight: bold; color: #FFD700;">-</span>
+            <br><br>
+            <button class="btn btn-primary" onclick="shareRoomToFriend()" style="margin-bottom: 10px;">
+              📱 分享给微信好友
+            </button>
+            <br>
+            <button class="copy-btn" onclick="copyRoomId()">复制房间号</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="game-status" id="gameStatus">
+        <span class="status-text">准备中...</span>
+      </div>
+      
+      <div class="game-controls">
+        <button class="btn btn-secondary" id="undoBtn" onclick="game && game.undo()">悔棋</button>
+        <button class="btn btn-primary" id="restartBtn" onclick="game && game.restart()">再来一局</button>
+      </div>
+      
+      <!-- AI难度选择（仅AI模式） -->
+      <div class="difficulty-selector" id="difficultySelector" style="margin-top: 15px;">
+        <button class="diff-btn" data-diff="easy" onclick="game && game.setDifficulty('easy')">简单</button>
+        <button class="diff-btn active" data-diff="normal" onclick="game && game.setDifficulty('normal')">普通</button>
+        <button class="diff-btn" data-diff="hard" onclick="game && game.setDifficulty('hard')">困难</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast提示 -->
+  <div id="toast" class="toast"></div>
+
+  <script src="js/ai.js"></script>
+  <script src="js/board.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/network.js"></script>
+</body>
+</html>
